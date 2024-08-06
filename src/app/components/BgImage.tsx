@@ -12,7 +12,7 @@ const BgImage: React.FC<BgImageProps> = ({
     {
         console.log('bg component', imageUrl);
 
-        let url = `http://62.3.6.59:8000/downloads/${imageUrl}`;
+        let url = `https://hagrumu.com/api/downloads/${imageUrl}`;
 
         return (
             <div className="w-full h-[550px] relative">
