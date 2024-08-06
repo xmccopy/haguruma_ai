@@ -7,7 +7,7 @@ import SavedKw from "../../components/SavedKw";
 import Title from "../../components/Title";
 import UploadBtn from "../../components/UploadBtn";
 import withAuth from "../../components/withAuth";
-import { useCallback, useState } from "react";
+import { ChangeEvent, useCallback, useState } from "react";
 import axios from "axios";
 import AddKeyword from "@/app/components/modals/AddKeyword";
 
@@ -102,7 +102,7 @@ const Home = () => {
     });
   }, []);
 
-  const handleSearchInputChange = (event) => {
+  const handleSearchInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   }
 
@@ -165,7 +165,7 @@ const Home = () => {
               </div>
             </div>
           </div>
-          <SavedKw setKeywordsDL={setKeywords} initialKeywords={keywords} searchTerm={searchTerm} handleKeywordSelection={handleKeywordSelection}/>
+          <SavedKw setKeywordsDL={setKeywords} initialKeywords={keywords} searchTerm={searchTerm} handleKeywordSelection={handleKeywordSelection} />
         </div>
       </Container>
     </>

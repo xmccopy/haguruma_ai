@@ -22,7 +22,7 @@ const StripePlan = () => {
     const [getPlan, setGetPlan] = useState<AllPlan[]>([]);
     const apiURL = process.env.NEXT_PUBLIC_API_URL;
 
-    const apiService = useMemo(() => new ApiService(apiURL!), []);
+    const apiService = useMemo(() => new ApiService(apiURL!), [apiURL]);
 
     const tofirstpage = () => {
         router.push('/kwgenerate')
@@ -36,17 +36,6 @@ const StripePlan = () => {
             if (!token) {
                 throw new Error('No authentication token found');
             }
-
-            // const response = await axios.post(
-            //     'http://62.3.6.59:8000/stripe/create-checkout-session', // Adjust this endpoint as needed
-            //     { planId: plan.id },
-            //     {
-            //         headers: {
-            //             'Content-Type': 'application/json',
-            //             'Authorization': `Bearer ${token}`
-            //         }
-            //     }
-            // );
 
             apiService.setToken(token);
             const response = await apiService.createCheckoutSession(plan.id)

@@ -126,7 +126,7 @@ const ConfigManager: React.FC<ConfigManagerProps> = ({ initialConfigs, updateFin
     return (
         <div>
             <div onClick={addH2} className="flex items-center justify-start gap-4 my-4 ml-5 hover:font-bold cursor-pointer">
-                <BsPlusCircleDotted size={25}/>
+                <BsPlusCircleDotted size={25} />
                 <p>h2 追加</p>
             </div>
             <DragDropContext onDragEnd={onDragEnd}>

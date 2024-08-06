@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Button from "./Button";
 import axios from "axios";
 import BgImage from "./BgImage";
@@ -43,19 +43,22 @@ const ArticleEnd = () => {
     const articleId = searchParams.get('articleId');
     const [refreshKey, setRefreshKey] = useState(0);
 
-    useEffect(() => {
-        fetchContent();
-    }, []);
+
 
     useEffect(() => {
         router.refresh();
-    }, [refreshKey])
+    }, [refreshKey, router])
 
-    const fetchContent = async () => {
+    const fetchContent = useCallback(async () => {
         setIsLoading(true);
+        setError(null);
+
         if (!articleId) {
-            throw new Error('Article ID is missing');
+            setError('Article ID is missing');
+            setIsLoading(false);
+            return;
         }
+
         try {
             const token = localStorage.getItem('token');
             if (!token) {
@@ -67,9 +70,10 @@ const ArticleEnd = () => {
                 {
                     headers: {
                         'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
                     }
-                });
+                }
+            );
 
             if (response.data?.contentJson === "") {
                 setError('No content available for this article');
@@ -82,13 +86,19 @@ const ArticleEnd = () => {
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 console.log("Failed to fetch keywords:", error.response?.data || error.message);
+                setError(error.response?.data || error.message);
             } else {
                 console.log("Failed to fetch keywords:", error);
+                setError("Failed to fetch keywords");
             }
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [articleId]);
+
+    useEffect(() => {
+        fetchContent();
+    }, [fetchContent]);
 
     const articleSaved = async () => {
         if (!articleId) {

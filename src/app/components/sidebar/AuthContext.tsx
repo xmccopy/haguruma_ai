@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 import { useRouter, useSearchParams } from 'next/navigation';
-import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
+import React, { createContext, useState, useEffect, useContext, ReactNode, useCallback } from 'react';
 
 interface User {
     username: string;
@@ -26,6 +26,24 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const searchParams = useSearchParams();
     const [user, setUser] = useState<User | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+
+
+    const fetchUserData = useCallback(async (token: string) => {
+        try {
+            const response = await axios.get<User>(`${process.env.NEXT_PUBLIC_API_URL!}/user`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            setUser(response.data);
+        } catch (error) {
+            console.error('Failed to fetch user:', error);
+            router.push('/register');
+        } finally {
+            setIsLoading(false);
+        }
+    }, [router]);
+
 
     useEffect(() => {
         const userString = searchParams.get('user');
@@ -51,23 +69,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 fetchUserData(storedToken);
             }
         }
-    }, [searchParams, router]);
-
-    const fetchUserData = async (token: string) => {
-        try {
-            const response = await axios.get<User>(`${process.env.NEXT_PUBLIC_API_URL!}/user`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            setUser(response.data);
-        } catch (error) {
-            console.error('Failed to fetch user:', error);
-            router.push('/register');
-        } finally {
-            setIsLoading(false);
-        }
-    };
+    }, [searchParams, router, fetchUserData]);
 
     useEffect(() => {
         const storedUser = localStorage.getItem('user');

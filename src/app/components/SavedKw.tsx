@@ -2,9 +2,7 @@
 
 import Button from "./Button";
 import { IoFilter } from "react-icons/io5";
-import { FaEllipsisVertical } from "react-icons/fa6";
-import { useCallback, useEffect, useState } from "react";
-import Filter from "./modals/Filter";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from 'axios';
 import Credit from "./modals/Credit";
@@ -17,8 +15,8 @@ interface Keyword {
     volume: string;
     status: string;
     selected: boolean;
-    articleId: string;
-    createdAt: string;
+    articleId?: string;
+    createdAt?: string;
 }
 
 interface SavedKwProps {
@@ -202,8 +200,16 @@ const SavedKw: React.FC<SavedKwProps> = ({ setKeywordsDL, initialKeywords, searc
                     });
 
                 const sortedKeywords = response.data
-                    .map((keyword: Keyword) => ({ ...keyword, selected: false }))
-                    .sort((a: Keyword, b: Keyword) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+                    .map((keyword: Keyword) => ({
+                        ...keyword,
+                        selected: false,
+                        createdAt: keyword.createdAt || new Date(0).toISOString() // Ensure createdAt is always defined
+                    }))
+                    .sort((a: Keyword, b: Keyword) => {
+                        const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+                        const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+                        return dateB - dateA;
+                    });
 
                 setKeywords(sortedKeywords);
                 setKeywordsDL(sortedKeywords); // Update the parent component's state

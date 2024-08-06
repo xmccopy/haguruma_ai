@@ -16,17 +16,13 @@ const BgImage: React.FC<BgImageProps> = ({
 
         return (
             <div className="w-full h-[550px] relative">
-                {/* <Image
-                key={imageUrl}
-                    src={`downloads/${imageUrl}`}
+                <Image
+                    src={url}
                     alt="image"
-                    unoptimized
-                    fill 
-                    style={{ objectFit: 'cover' }}
+                    style={{ objectFit: 'cover', width: '100%', height: '100%' }}
                     className="z-10"
-                /> */}
-                {/* <img src={`data:image/jpeg;base64,${imageUrl}`} alt="" style={{objectFit: 'cover', width:'100%', height: '100%'}} /> */}
-                <img src={url} alt="" style={{ objectFit: 'cover', width: '100%', height: '100%' }} />
+                />
+                {/* <img src={url} alt="" style={{ objectFit: 'cover', width: '100%', height: '100%' }} /> */}
             </div>
         )
     }

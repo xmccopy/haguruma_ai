@@ -1,10 +1,11 @@
 'use client'
 
 import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { Toast } from 'primereact/toast';
 import 'primereact/resources/themes/saga-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
+import PromptInput from "./PromptInput"; // Import the custom component
 
 interface Prompt {
     id: string;
@@ -72,7 +73,7 @@ const PromptSetting = () => {
         fetchAIModel();
     }, []);
 
-    const updatePrompt = async (id: string, newPrompt: string) => {
+    const updatePrompt = useCallback(async (id: string, newPrompt: string) => {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
@@ -103,7 +104,7 @@ const PromptSetting = () => {
             console.error(`Failed to update prompt:`, error);
             toast.current?.show({ severity: 'error', summary: 'Error', detail: 'An error occurred during updating prompt', life: 2000 });
         }
-    };
+    }, []);
 
     const updateModel = async (model: string) => {
         try {
@@ -169,54 +170,18 @@ const PromptSetting = () => {
                 { label: "内容プロンプト", type: "article" }
             ].map(({ label, type }) => {
                 const { id, prompt } = getPromptByType(type);
-                const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-                const adjustHeight = () => {
-                    const textarea = textareaRef.current;
-                    if (textarea) {
-                        textarea.style.height = 'auto'; // Reset height
-                        textarea.style.height = textarea.scrollHeight + 'px'; // Adjust height
-                    }
-                };
-
-                useEffect(() => {
-                    adjustHeight(); // Adjust height on mount and whenever the prompt changes
-
-                    // Add event listener to adjust height on window resize
-                    window.addEventListener('resize', adjustHeight);
-
-                    // Cleanup event listener on unmount
-                    return () => {
-                        window.removeEventListener('resize', adjustHeight);
-                    };
-                }, [prompt]);
 
                 return (
-                    <div key={type}>
-                        <p className="text-[14px] text-[#1A1F36] font-bold mb-3">{label}</p>
-                        <div className="flex gap-4 mt-4">
-                            <textarea
-                                ref={textareaRef}
-                                className="w-full resize-none overflow-hidden p-[12px] text-base border-2 rounded-lg"
-                                placeholder="Input prompt"
-                                value={prompt}
-                                onChange={(e) => {
-                                    setPrompts(prevPrompts =>
-                                        prevPrompts.map(p => p.id === id ? { ...p, prompt: e.target.value } : p)
-                                    );
-                                    adjustHeight(); // Adjust height on input
-                                }}
-                                onInput={adjustHeight} // Adjust height on input
-                            />
-                            <button
-                                onClick={() => updatePrompt(id, prompt)}
-                                className="text-[14px] text-[#5469D4] min-w-max"
-                                type="button"
-                            >
-                                更新する
-                            </button>
-                        </div>
-                    </div>
+                    <PromptInput
+                        key={type}
+                        id={id}
+                        label={label}
+                        prompt={prompt}
+                        onChange={(newPrompt) => setPrompts(prevPrompts =>
+                            prevPrompts.map(p => p.id === id ? { ...p, prompt: newPrompt } : p)
+                        )}
+                        onSave={() => updatePrompt(id, prompt)}
+                    />
                 );
             })}
         </div>

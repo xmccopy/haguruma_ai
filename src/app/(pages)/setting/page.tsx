@@ -369,7 +369,7 @@ const Home = () => {
       fetchAutoSubKeywords(keywordParam)
     }
 
-  }, [searchParams]);
+  }, [searchParams, fetchAutoSubKeywords]);
 
   return (
     <>

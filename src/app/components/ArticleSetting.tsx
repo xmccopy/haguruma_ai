@@ -14,7 +14,7 @@ interface SubKeyword {
 }
 
 interface Article {
-    id: number;
+    id: string;
     title: string;
     keyword: string;
     subKeywords: SubKeyword[];
@@ -33,12 +33,12 @@ const ArticleSetting = () => {
     const [articles, setArticles] = useState<Article[]>([]);
     const [filteredArticles, setFilteredArticles] = useState<Article[]>([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [selectedArticleId, setSelectedArticleId] = useState<number | null>(null);
+    const [selectedArticleId, setSelectedArticleId] = useState<string | null>(null);
     const [showCreditModal, setShowCreditModal] = useState(false);
-    const [showDropdown, setShowDropdown] = useState<number | null>(null);
+    const [showDropdown, setShowDropdown] = useState<string | null>(null);
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | 'none'>('none');
     const [filter, setFilter] = useState('');
-    const [selectedArticles, setSelectedArticles] = useState<number[]>([]);
+    const [selectedArticles, setSelectedArticles] = useState<string[]>([]);
     const dropdownRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
@@ -61,7 +61,7 @@ const ArticleSetting = () => {
         }
     };
 
-    const handleArticleSelect = (articleId: number, isSelected: boolean) => {
+    const handleArticleSelect = (articleId: string, isSelected: boolean) => {
         if (isSelected) {
             setSelectedArticles(prevSelected => [...prevSelected, articleId]);
         } else {
@@ -111,34 +111,37 @@ const ArticleSetting = () => {
         setShowCreditModal(false);
     }
 
-    const handleEllipsisClick = (articleId: number, event: React.MouseEvent<HTMLElement>) => {
-        const rect = (event.target as HTMLElement).getBoundingClientRect();
-        const dropdownWidth = 200; // Example width
-        const dropdownHeight = 150; // Example height
-        const offset = 5; // Offset from the element
+    const handleEllipsisClick = useCallback(
+        (articleId: string, event: React.MouseEvent<SVGElement>) => {
+            const rect = event.currentTarget.getBoundingClientRect();
+            const dropdownWidth = 200; // Example width
+            const dropdownHeight = 150; // Example height
+            const offset = 5; // Offset from the element
 
-        let top = rect.bottom + window.scrollY + offset - 10;
-        let right = window.innerWidth - rect.right - dropdownWidth - offset;
+            let top = rect.bottom + window.scrollY + offset - 10;
+            let right = window.innerWidth - rect.right - dropdownWidth - offset;
 
-        // Adjust position if the dropdown goes beyond the viewport
-        if (right < 0) {
-            right = offset + 80; // Align to the left of the viewport
-        }
-        if (top + dropdownHeight > window.innerHeight + window.scrollY) {
-            top = rect.top + window.scrollY - dropdownHeight - offset; // Position above if below viewport
-        }
+            // Adjust position if the dropdown goes beyond the viewport
+            if (right < 0) {
+                right = offset + 80; // Align to the left of the viewport
+            }
+            if (top + dropdownHeight > window.innerHeight + window.scrollY) {
+                top = rect.top + window.scrollY - dropdownHeight - offset; // Position above if below viewport
+            }
 
-        // Update state with the calculated position
-        setDropdownPosition({
-            top,
-            right
-        });
+            // Update state with the calculated position
+            setDropdownPosition({
+                top,
+                right
+            });
 
-        // Toggle dropdown visibility
-        setShowDropdown(prevState => prevState === articleId ? null : articleId);
-    };
+            // Toggle dropdown visibility
+            setShowDropdown(prevState => prevState === articleId ? null : articleId);
+        },
+        []
+    );
 
-    const wordPressPost = async (articleId: number) => {
+    const wordPressPost = async (articleId: string) => {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
@@ -163,11 +166,11 @@ const ArticleSetting = () => {
         }
     }
 
-    const shopifyPost = (articleId: number) => {
+    const shopifyPost = (articleId: string) => {
         // Implement Shopify post logic here
     }
 
-    const handleDeleteArticle = async (articleId: number) => {
+    const handleDeleteArticle = async (articleId: string) => {
         try {
             const token = localStorage.getItem('token');
             if (!token) {

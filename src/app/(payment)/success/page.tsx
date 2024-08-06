@@ -15,7 +15,7 @@ const Success = () => {
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const apiURL = process.env.NEXT_PUBLIC_API_URL;
 
-    const apiService = useMemo(() => new ApiService(apiURL!), []);
+    const apiService = useMemo(() => new ApiService(apiURL!), [apiURL]);
 
     const verifyPayment = useCallback(async (sessionId: string) => {
         try {
