@@ -15,7 +15,7 @@ const ContentEdit: React.FC<ContentEditProps> = ({ configcontent, onContentChang
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
     const handleActivate = () => {
-        setIsActive(true);
+        setIsActive(!isActive);
     };
     useEffect(() => {
         adjustHeight();
@@ -47,7 +47,7 @@ const ContentEdit: React.FC<ContentEditProps> = ({ configcontent, onContentChang
                         value={content}
                         wrap="hard"
                         readOnly
-                        className={`w-full p-1 h-6 leading-25 resize-none overflow-hidden rounded-md ${isActive ? 'bg-white text-black' : 'bg-gray-100 text-gray-500'} `}
+                        className={`w-full p-1 h-6 leading-25 resize-none focus:outline-none focus:border-none overflow-hidden rounded-md ${isActive ? 'bg-white text-black' : 'bg-gray-100 text-gray-500'} `}
                     />
                 )}
             </td>
