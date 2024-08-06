@@ -72,15 +72,15 @@ const ArticleSetting = () => {
     const getStatusLabel = (status: string) => {
         switch (status) {
             case 'Completed':
-                return '完 成';
+                return '完成';
             default:
                 return status;
         }
     }
 
     const getStatusStyle = (status: string) => {
-        if (status === 'Created') {
-            return 'bg-[#FF854F] text-white';
+        if (status === 'Completed') {
+            return 'bg-[#1dcbde] font-bold text-white mt-1';
         }
         return '';
     }
@@ -88,7 +88,7 @@ const ArticleSetting = () => {
     const getStatusLabelBtn = (status: string) => {
         switch (status) {
             case 'Completed':
-                return '完 成';
+                return '編集';
             case 'NotStarted':
                 return '記事生成';
             default:

@@ -72,9 +72,9 @@ const SavedKw: React.FC<SavedKwProps> = ({ setKeywordsDL, initialKeywords, searc
     const getStatusLabelBtn = (status: string) => {
         switch (status) {
             case 'Created':
-                return '編 集';
+                return '編集';
             case 'Draft':
-                return '続行する'
+                return '続行する';
             case 'NotStarted':
                 return '記事生成';
             default:
@@ -83,6 +83,9 @@ const SavedKw: React.FC<SavedKwProps> = ({ setKeywordsDL, initialKeywords, searc
     }
 
     const handleButtonClick = (keyword: Keyword) => {
+        if (keyword.status === 'Created') {
+            router.push(`/setting/article-end?articleId=${keyword.articleId}`);
+        }
         if (keyword.status === 'NotStarted') {
             setShowCreditModal(true);
             setSelectedKeyword(keyword);
@@ -328,7 +331,6 @@ const SavedKw: React.FC<SavedKwProps> = ({ setKeywordsDL, initialKeywords, searc
                                     <td className="flex flex-row items-center justify-between whitespace-nowrap gap-4 px-4 py-2 font-medium text-gray-900 text-[14px]">
                                         <Button
                                             className="custom-class"
-                                            disabled={keyword.status === 'Created'}
                                             onClick={() => handleButtonClick(keyword)}
                                             common
                                             icon={FaStar}

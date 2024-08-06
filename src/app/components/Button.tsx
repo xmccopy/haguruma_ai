@@ -41,9 +41,9 @@ const Button: React.FC<ButtonProps> = ({
                 font-bold
                 transition-colors
                 ${common ? 'px-[18px] text-white' : ''}
-                ${outline ? 'px-[18px] bg-white text-center text-[#5469D4]' : 'bg-[#5469D4]'}
+                ${outline ? 'px-[18px] text-center text-[#5469D4]' : 'bg-[#5469D4]'}
                 ${signInOutBtn ? 'w-full bg-[#5469D4] text-center text-white' : ''}
-                ${roundBtn ? 'bg-white rounded-full px-[24px] py-[8px] text-gray-900' : 'rounded-md'}
+                ${roundBtn ? ' rounded-full px-[24px] py-[8px] text-gray-900' : 'rounded-md'}
                 ${disabled
                     ? 'opacity-50 cursor-not-allowed'
                     : roundBtn
@@ -65,7 +65,7 @@ const Button: React.FC<ButtonProps> = ({
             ) : (
                 <span className="flex items-center justify-center gap-2">
                     {label}
-                    {label !== '続行する' && Icon && <Icon size={18} className="text-yellow-300" />}
+                    {!(label === '編集' || label === '続行する') && Icon && <Icon size={18} className="text-yellow-300" />}
                     {titleLimit !== undefined && (
                         <span className={`ml-2 text-xs transition-all ${titleLimit <= 1 ? 'text-red-500' : ''}`}>
                             （{titleLimit}/3）
